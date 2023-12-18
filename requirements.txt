@@ -3,6 +3,5 @@ pandas
 pymongo
 bcrypt
 nltk
-re
 sklearn
 flask
