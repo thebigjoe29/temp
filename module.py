@@ -144,114 +144,114 @@ def user_login():
 
 
 # import nltk
-# import re
-# from nltk.stem.porter import PorterStemmer
-# from nltk.corpus import stopwords
-# from sklearn.metrics.pairwise import linear_kernel
-# from sklearn.feature_extraction.text import TfidfVectorizer
+import re
+from nltk.stem.porter import PorterStemmer
+from nltk.corpus import stopwords
+from sklearn.metrics.pairwise import linear_kernel
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-# # In[41]:
+# In[41]:
 
 
-# #Listing out stopwords in english
-# x=stopwords.words('english')
+#Listing out stopwords in english
+x=stopwords.words('english')
 
 
-# # ## Text prepocessing 
+# ## Text prepocessing 
 
-# # In[46]:
-
-
-# #Cleaning topic column and appending to list
-
-# topic_processed=[]
-# for i in range(len(data)):
-#     topic=data.loc[i, 'Topic']
-#     topic=re.sub('[^a-zA-Z]',' ',topic)
-#     topic=topic.lower()
-#     topic=topic.split()
-#     ps=PorterStemmer()
-#     topic=[ps.stem(word) for word in topic if not word in set(stopwords.words('english'))]
-#     topic=' '.join(topic)
-#     topic_processed.append(topic)
+# In[46]: 
 
 
-# # In[49]:
+#Cleaning topic column and appending to list
+
+topic_processed=[]
+for i in range(len(data)):
+    topic=data.loc[i, 'Topic']
+    topic=re.sub('[^a-zA-Z]',' ',topic)
+    topic=topic.lower()
+    topic=topic.split()
+    ps=PorterStemmer()
+    topic=[ps.stem(word) for word in topic if not word in set(stopwords.words('english'))]
+    topic=' '.join(topic)
+    topic_processed.append(topic)
 
 
-# #Cleaning skills column and appending to list
-# skills_processed=[]
-# for i in range(len(data)):
-#     skills=data.loc[i, 'Skills']
-#     skills=re.sub('[^a-zA-Z]',' ',skills)
-#     skills=skills.lower()
-#     skills=skills.split()
-#     ps=PorterStemmer()
-#     skills=[ps.stem(word) for word in skills if not word in set(stopwords.words('english'))]
-#     skills=' '.join(skills)
-#     skills_processed.append(skills)
+# In[49]:
 
 
-# # ## Building a recommendation system 
-
-# # In[50]:
-
-
-# #TF-IDF vectorization
-# vectorizer = TfidfVectorizer()
-# matrix = vectorizer.fit_transform(topic_processed)
-# cosine_similarities = linear_kernel(matrix,matrix)
-# name=(data['Name'])
-# interest=(data['interest'])
-# collaboration=(data['collaboration'])
-# indices = pd.Series(data.index, index=data['Name'])
+#Cleaning skills column and appending to list
+skills_processed=[]
+for i in range(len(data)):
+    skills=data.loc[i, 'Skills']
+    skills=re.sub('[^a-zA-Z]',' ',skills)
+    skills=skills.lower()
+    skills=skills.split()
+    ps=PorterStemmer()
+    skills=[ps.stem(word) for word in skills if not word in set(stopwords.words('english'))]
+    skills=' '.join(skills)
+    skills_processed.append(skills)
 
 
-# # In[51]:
+# ## Building a recommendation system 
+
+# In[50]:
 
 
-# #Taking into consideration collaboration interests
-# df = pd.DataFrame({'name': name,'interest':interest, 'collaboration':collaboration})
+#TF-IDF vectorization
+vectorizer = TfidfVectorizer()
+matrix = vectorizer.fit_transform(topic_processed)
+cosine_similarities = linear_kernel(matrix,matrix)
+name=(data['Name'])
+interest=(data['interest'])
+collaboration=(data['collaboration'])
+indices = pd.Series(data.index, index=data['Name'])
 
 
-# # In[52]:
+# In[51]:
 
 
-# #Defining a recommender function
-# def profile_recommender(name):
-#     idx = indices[name]
-#     sim_scores = list(enumerate(cosine_similarities[idx]))
-#     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-#     sim_scores = sim_scores[1:5] 
-#     name_indices = [i[0] for i in sim_scores]
+#Taking into consideration collaboration interests
+df = pd.DataFrame({'name': name,'interest':interest, 'collaboration':collaboration})
+
+
+# In[52]:
+
+
+#Defining a recommender function
+def profile_recommender(name):
+    idx = indices[name]
+    sim_scores = list(enumerate(cosine_similarities[idx]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sim_scores[1:5] 
+    name_indices = [i[0] for i in sim_scores]
     
-#     #Recommended profiles based on NLP performed on skills
-#     recom_profiles=df.iloc[name_indices]
+    #Recommended profiles based on NLP performed on skills
+    recom_profiles=df.iloc[name_indices]
     
-#     #Considering interests and collaborations specified by the user
-#     input_interests = set(df.loc[df['name'] == name, 'interest'].values[0].split(','))
-#     input_collaborations = set(df.loc[df['name'] == name, 'collaboration'].values[0].split(','))
+    #Considering interests and collaborations specified by the user
+    input_interests = set(df.loc[df['name'] == name, 'interest'].values[0].split(','))
+    input_collaborations = set(df.loc[df['name'] == name, 'collaboration'].values[0].split(','))
     
-#     #Filterting recommended profiles who have common interests and collaborations
-#     common_interests = recom_profiles[recom_profiles['interest'].apply(lambda x: any(item in input_interests for item in x.split(',')))]
-#     common_collaborations = recom_profiles[recom_profiles['collaboration'].apply(lambda x: any(item in input_collaborations for item in x.split(',')))]
+    #Filterting recommended profiles who have common interests and collaborations
+    common_interests = recom_profiles[recom_profiles['interest'].apply(lambda x: any(item in input_interests for item in x.split(',')))]
+    common_collaborations = recom_profiles[recom_profiles['collaboration'].apply(lambda x: any(item in input_collaborations for item in x.split(',')))]
     
-#     #Merging the filtered data
-#     merged_recommendations = pd.merge(common_interests, common_collaborations, on='name', how='inner')
+    #Merging the filtered data
+    merged_recommendations = pd.merge(common_interests, common_collaborations, on='name', how='inner')
     
-#     return merged_recommendations
+    return merged_recommendations
     
 
 
-# # ## Recommending names 
+# ## Recommending names 
 
-# # In[53]:
-
-
+# In[53]:
 
 
-# # In[ ]:
+
+
+# In[ ]:
 
 
 
