@@ -143,16 +143,17 @@ def user_login():
 # In[40]:
 
 
-# import nltk
+import nltk
 import re
 from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
+
 from sklearn.metrics.pairwise import linear_kernel
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 # In[41]:
-
+nltk.download('stopwords')
 
 #Listing out stopwords in english
 x=stopwords.words('english')

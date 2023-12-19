@@ -5,4 +5,3 @@ bcrypt
 nltk
 scikit-learn
 flask
-stop-words
