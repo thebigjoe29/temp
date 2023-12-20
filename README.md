@@ -82,11 +82,10 @@ Database : MongoDB
 &nbsp;
 *API reference*
 
-```http (GET)
-  https://dh-oyl4.onrender.com/get_data?email=$email
+```http (POST)
+  https://dh-oyl4.onrender.com/get_data
 ```
 
-Replace $email with actual email or pass as parameter to function
 
 | Parameter | Return Type     | Return Object                  |
 | :-------- | :------- | :-------------------------------- |
@@ -99,15 +98,16 @@ Replace $email with actual email or pass as parameter to function
 &nbsp;
 *API reference*
 
-```http (GET)
-  https://dh-oyl4.onrender.com/get_recommendations?email=$email
+```http (POST)
+   https://dh-oyl4.onrender.com/get_recommendations
 ```
 
 Replace $email with actual email or pass as parameter to function
 
 | Parameter | Return Type     | Return Object                  |
 | :-------- | :------- | :-------------------------------- |
-| `email`      | `json` | recommended emails|
+| `if email found in json object`      | `json` | recommended emails|
+| `else`      | `json` | 'error': 'Email not provided in the request'|
 
 
 
