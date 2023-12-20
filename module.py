@@ -50,8 +50,9 @@ def check_password(email, password):
     if user and bcrypt.checkpw(password.encode("utf-8"), user["password"]):
         print("Successful login!")
 
-        global user_name, actual_interests, actual_collaborations
+        global user_name, actual_interests, actual_collaborations,user_email
         user_name = user['Name']
+        user_email=user['Email']
 
         # Extract interests and collaborations from the data DataFrame
         user_data = data[data['Name'] == user_name]
@@ -161,15 +162,16 @@ cosine_similarities = linear_kernel(matrix,matrix)
 name=(data['Name'])
 interest=(data['interest'])
 collaboration=(data['collaboration'])
-indices = pd.Series(data.index, index=data['Name'])
+email=(data['Email'])
+indices = pd.Series(data.index, index=data['Email'])
 
 #Taking into consideration collaboration interests
-df = pd.DataFrame({'name': name,'interest':interest, 'collaboration':collaboration})
+df = pd.DataFrame({'email': email,'name': name,'interest':interest, 'collaboration':collaboration})
 
 
 #Defining a recommender function
-def profile_recommender(name):
-    idx = indices[name]
+def profile_recommender(email):
+    idx = indices[email]
     sim_scores = list(enumerate(cosine_similarities[idx]))
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
     sim_scores = sim_scores[1:5] 
@@ -179,17 +181,16 @@ def profile_recommender(name):
     recom_profiles=df.iloc[name_indices]
     
     #Considering interests and collaborations specified by the user
-    input_interests = set(df.loc[df['name'] == name, 'interest'].values[0].split(','))
-    input_collaborations = set(df.loc[df['name'] == name, 'collaboration'].values[0].split(','))
+    input_interests = set(df.loc[df['email'] == email, 'interest'].values[0].split(','))
+    input_collaborations = set(df.loc[df['email'] == email, 'collaboration'].values[0].split(','))
     
     #Filterting recommended profiles who have common interests and collaborations
     common_interests = recom_profiles[recom_profiles['interest'].apply(lambda x: any(item in input_interests for item in x.split(',')))]
     common_collaborations = recom_profiles[recom_profiles['collaboration'].apply(lambda x: any(item in input_collaborations for item in x.split(',')))]
     
     #Merging the filtered data
-    merged_recommendations = pd.merge(common_interests, common_collaborations, on='name', how='inner')
+    merged_recommendations = pd.merge(common_interests, common_collaborations, on='email', how='inner')
     
     return merged_recommendations
-
 
 
