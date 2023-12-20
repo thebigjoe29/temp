@@ -59,6 +59,15 @@ def get_data():
         return jsonify({'data': 'Data not found for the given email'}), 404
 
 
+#To get recommendations
+@app.route('/get_recommendations', methods=['GET'])
+def get_recommendations():
+    email=request.args.get('email')
+    final_recommendation=profile_recommender(email)
+    final_recommendation=final_recommendation.loc[final_recommendation['email'] != email, ['email']]
+    return jsonify(final_recommendation.to_dict(orient='records'))
+
+    
 
 
 if __name__ == '__main__':
