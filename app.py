@@ -67,7 +67,6 @@ def get_data():
 
 
 #To get recommendations
-@app.route('/get_recommendations', methods=['GET'])
 @app.route('/get_recommendations', methods=['POST'])
 def get_recommendations():
     try:
