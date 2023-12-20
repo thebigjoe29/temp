@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## Importing data manipulation libraries 
 
-# In[30]:
-
+# Importing data manipulation libraries 
 
 import pandas as pd
 import numpy as np
@@ -12,10 +10,8 @@ import bcrypt
 from pymongo import MongoClient
 
 
-# ## Establishing server connection - MongodB
 
-# In[31]:
-
+# Establishing server connection - MongodB
 
 try:
     # Connect to the MongoDB server
@@ -28,10 +24,8 @@ except Exception as e:
       print(f"Error connecting to MongoDB: {e}")
 
 
-# ## Establishing database connection - MongoDb 
 
-# In[32]:
-
+#Establishing database connection - MongoDb 
 
 #Function to connect to database
 def update_data():
@@ -39,27 +33,16 @@ def update_data():
     data = pd.DataFrame(list(collection.find()))
     #data
 
-
-# In[33]:
-
-
 update_data()
 
 
-# ## Defining profile creation and login functions 
-
-# In[34]:
-
+#Defining profile creation and login functions 
 
 #Function to encrypt password with hashing
 def hash_password(password):
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed
-
-
-# In[35]:
-
 
 def check_password(email, password):
     user = collection.find_one({"Email": email})
@@ -85,9 +68,6 @@ def check_password(email, password):
         return {
             'authentication': False
         }
-
-# In[36]:
-
 
 #Funtion to create profile and update database
 def create_profile():
@@ -121,10 +101,6 @@ def create_profile():
     x = collection.insert_one(dict)
     print("Profile created successfully")
 
-
-# In[37]:
-
-
 #Function to authenticate user login
 def user_login():
     email=str(input("Enter your Email "))
@@ -132,16 +108,7 @@ def user_login():
     check_password(email, password)
 
 
-# ## Executing authentication and profile creation 
-
-# In[38]:
-
-
-
-# ## Importing NLP libraries 
-
-# In[40]:
-
+#Importing NLP libraries 
 
 import nltk
 import re
@@ -151,17 +118,11 @@ from nltk.corpus import stopwords
 from sklearn.metrics.pairwise import linear_kernel
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-
-# In[41]:
+#Downloading stopwords
 nltk.download('stopwords')
 
 #Listing out stopwords in english
 x=stopwords.words('english')
-
-
-# ## Text prepocessing 
-
-# In[46]: 
 
 
 #Cleaning topic column and appending to list
@@ -178,9 +139,6 @@ for i in range(len(data)):
     topic_processed.append(topic)
 
 
-# In[49]:
-
-
 #Cleaning skills column and appending to list
 skills_processed=[]
 for i in range(len(data)):
@@ -194,10 +152,7 @@ for i in range(len(data)):
     skills_processed.append(skills)
 
 
-# ## Building a recommendation system 
-
-# In[50]:
-
+#Building a recommendation system 
 
 #TF-IDF vectorization
 vectorizer = TfidfVectorizer()
@@ -208,15 +163,8 @@ interest=(data['interest'])
 collaboration=(data['collaboration'])
 indices = pd.Series(data.index, index=data['Name'])
 
-
-# In[51]:
-
-
 #Taking into consideration collaboration interests
 df = pd.DataFrame({'name': name,'interest':interest, 'collaboration':collaboration})
-
-
-# In[52]:
 
 
 #Defining a recommender function
@@ -242,18 +190,6 @@ def profile_recommender(name):
     merged_recommendations = pd.merge(common_interests, common_collaborations, on='name', how='inner')
     
     return merged_recommendations
-    
-
-
-# ## Recommending names 
-
-# In[53]:
-
-
-
-
-# In[ ]:
-
 
 
 

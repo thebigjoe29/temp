@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 
 
-
+#To autnethicate and signin the user
 @app.route('/login', methods=['POST'])
 def user_login():
     if request.headers['Content-Type'] == 'application/json':
@@ -19,7 +19,7 @@ def user_login():
 
 
 
-
+#To create prpfile based on form data
 @app.route('/signup', methods=['POST'])
 def user_signup():
     details=request.get_json()
@@ -36,9 +36,6 @@ def user_signup():
     name=details.get('name','')
     profession=details.get('profession','')
     year=details.get('year','')
-
-    #what does the user want to do?
-    #options- research, projects
     interest=details.get('interest','')
     collaboration=details.get('collaboration','')
     topic=details.get('topic','')
@@ -48,8 +45,21 @@ def user_signup():
     x = collection.insert_one(dict)
     update_data()
     return jsonify({'signup': 'success'})
-    
- 
-   
+
+
+
+#To get data using email as argument
+@app.route('/get_data', methods=['GET'])
+def get_data():
+    email=request.args.get('email')
+    result = collection.find_one({'Email': email}, {'_id': 0, 'password': 0})
+    if result:
+        return jsonify(result)
+    else:
+        return jsonify({'data': 'Data not found for the given email'}), 404
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0',port=10000)
