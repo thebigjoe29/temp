@@ -94,5 +94,21 @@ Replace $email with actual email or pass as parameter to function
 | `else`      | `json` | {”data”: 'Data not found for the given email'}|
 
 
+## Getting recommendations:
+
+&nbsp;
+*API reference*
+
+```http (GET)
+  https://dh-oyl4.onrender.com/get_recommendations?email=$email
+```
+
+Replace $email with actual email or pass as parameter to function
+
+| Parameter | Return Type     | Return Object                  |
+| :-------- | :------- | :-------------------------------- |
+| `email`      | `json` | recommended emails|
+
+
 
 
