@@ -49,25 +49,39 @@ def user_signup():
 
 
 #To get data using email as argument
-@app.route('/get_data', methods=['GET'])
+@app.route('/get_data', methods=['POST'])
 def get_data():
-    email=request.args.get('email')
-    result = collection.find_one({'Email': email}, {'_id': 0, 'password': 0})
-    if result:
-        return jsonify(result)
-    else:
-        return jsonify({'data': 'Data not found for the given email'}), 404
+    try:
+        data = request.get_json()
+        email = data['email']
+        
+        result = collection.find_one({'Email': email}, {'_id': 0, 'password': 0})
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({'data': 'Data not found for the given email'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400 
+
 
 
 #To get recommendations
 @app.route('/get_recommendations', methods=['GET'])
+@app.route('/get_recommendations', methods=['POST'])
 def get_recommendations():
-    email=request.args.get('email')
-    final_recommendation=profile_recommender(email)
-    final_recommendation=final_recommendation.loc[final_recommendation['email'] != email, ['email']]
-    return jsonify(final_recommendation.to_dict(orient='records'))
+    try:
+        data = request.get_json()
+        email = data.get('email')
 
-    
+        if email:
+            final_recommendation = profile_recommender(email)
+            final_recommendation = final_recommendation.loc[final_recommendation['email'] != email, ['email']]
+            return jsonify(final_recommendation.to_dict(orient='records'))
+        else:
+            return jsonify({'error': 'Email not provided in the request'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400  
 
 
 if __name__ == '__main__':
