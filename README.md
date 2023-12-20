@@ -63,7 +63,7 @@ Database : MongoDB
 &nbsp;
 
 ```http
-  https://dh-oyl4.onrender.com/login
+  https://dh-oyl4.onrender.com/signup
 ```
 
 | Parameter | Return Type     | Return Object                      |
