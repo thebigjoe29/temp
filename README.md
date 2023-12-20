@@ -21,7 +21,7 @@ Database : MongoDB
 
 *API reference*
 
-```http
+```http (POST)
   https://dh-oyl4.onrender.com/login
 ```
 
@@ -66,7 +66,7 @@ Database : MongoDB
 
 *API reference*
 
-```http
+```http (POST)
   https://dh-oyl4.onrender.com/signup
 ```
 
@@ -75,3 +75,24 @@ Database : MongoDB
 | `If email already exists`      | `json` | {"signup":"exists"} |
 | `elseif password mismatch`      | `json` | {"signup":"mismatch"} |
 | `else`      | `json` | {"signup":"success"} |
+
+
+## Retrieving user data :
+
+&nbsp;
+*API reference*
+
+```http (GET)
+  https://dh-oyl4.onrender.com/get_data?email=$email
+```
+
+Replace $email with actual email or pass as parameter to function
+
+| Parameter | Return Type     | Return Object                  |
+| :-------- | :------- | :-------------------------------- |
+| `if email found`      | `json` | all the details|
+| `else`      | `json` | {”data”: 'Data not found for the given email'}|
+
+
+
+
