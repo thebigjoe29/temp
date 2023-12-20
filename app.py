@@ -1,6 +1,6 @@
 from flask import Flask, render_template,request,jsonify
 import module
-from module import check_password, update_data
+from module import *
 
 app = Flask(__name__)
 
@@ -27,11 +27,11 @@ def user_signup():
     query = {"Email": email}
     check_email = collection.find_one(query)
     if(check_email):
-        return jsonify({'message': 'Email already exists'})
+        return jsonify({'signup': 'exists'})
     password=details.get('password','')
     password_repeat=details.get('password_repeat','')
     if(password!=password_repeat):
-        return jsonify({'message': 'Passwords do not match'})
+        return jsonify({'signup': 'mismatch'})
     password=hash_password(password)
     name=details.get('name','')
     profession=details.get('profession','')
@@ -47,7 +47,7 @@ def user_signup():
     dict={"Name":name,"Email":email,"profession":profession,"Year":year,"interest":interest,"collaboration":collaboration,"Topic":topic,"Skills":skills,"experience":experience,"password":password}
     x = collection.insert_one(dict)
     update_data()
-    return jsonify({'message': 'Profile created successfully!'})
+    return jsonify({'signup': 'success'})
     
  
    
