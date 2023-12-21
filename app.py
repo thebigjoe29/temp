@@ -65,7 +65,6 @@ def get_data():
         return jsonify({'error': str(e)}), 400 
 
 
-
 #To get recommendations
 @app.route('/get_recommendations', methods=['POST'])
 def get_recommendations():
@@ -108,6 +107,7 @@ def swipe():
         message = 'Swipe added successfully'
 
     return jsonify({'message': message})
+
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0',port=10000)
