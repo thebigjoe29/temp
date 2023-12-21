@@ -109,6 +109,22 @@ Replace $email with actual email or pass as parameter to function
 | `if email found in json object`      | `json` | recommended emails|
 | `else`      | `json` | 'error': 'Email not provided in the request'|
 
+## Swipe feature:
+
+&nbsp;
+*API reference*
+
+```http (POST)
+   https://dh-oyl4.onrender.com/swipe
+```
+
+Replace $email with actual email or pass as parameter to function
+
+| Parameter | Return Type     | Return Object                  |
+| :-------- | :------- | :-------------------------------- |
+| `if record already exists`      | `json` | {"message":'Swipe updated succesfully'}|
+| `else`      | `json` | {"message":'Swipe added succesfully'}|
+
 
 
 
