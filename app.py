@@ -1,6 +1,6 @@
 from flask import Flask, render_template,request,jsonify
-import module
 from module import *
+from swipe import *
 
 app = Flask(__name__)
 
@@ -80,8 +80,34 @@ def get_recommendations():
         else:
             return jsonify({'error': 'Email not provided in the request'}), 400
     except Exception as e:
-        return jsonify({'error': str(e)}), 400  
+        return jsonify({'error': str(e)}), 400 
+    
+    
+#To get swipe data
+@app.route('/swipe', methods=['POST'])
+def swipe():
+    data = request.get_json()
+    user1 = data.get('user1')
+    user2 = data.get('user2')
+    status1 = data.get('status1')
+    status2 = data.get('status2')
+    
+    existing_document = swipe_collection.find_one({'user1': user1, 'user2': user2})
 
+    if existing_document:
+        
+        swipe_collection.update_one(
+            {'user1': user1, 'user2': user2},
+            {'$set': {'status1': status1, 'status2': status2}}
+        )
+        message = 'Swipe updated successfully'
+    else:
+        
+        document = {'user1': user1, 'user2': user2, 'status1': status1, 'status2': status2}
+        swipe_collection.insert_one(document)
+        message = 'Swipe added successfully'
+
+    return jsonify({'message': message})
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0',port=10000)
